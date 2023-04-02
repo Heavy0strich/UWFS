@@ -39,28 +39,36 @@ def transform_cog_vel(v_cg, psi_dot, cp_cg_distance, cp_cg_angle, beta, model_ty
             # contact patch velocities 
             #   cp_velocities[:, 0] : Longitudinal CoG direction
             #   cp_velocities[:, 1] : Lateral CoG direction
-            cp_velocities       = np.zeros((4, 2))
+            cp_velocities_xy       = np.zeros((4, 2))
+            cp_velocities          = np.zeros((4, 1))
 
-            cp_velocities[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
-            cp_velocities[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+            cp_velocities_xy[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
+            cp_velocities_xy[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+            cp_velocities[0]       = np.sqrt(cp_velocities_xy[0, 0]**2 + cp_velocities_xy[0, 1]**2)
 
-            cp_velocities[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
-            cp_velocities[1, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities_xy[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities_xy[1, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities[1]       = np.sqrt(cp_velocities_xy[1, 0]**2 + cp_velocities_xy[1, 1]**2)
 
-            cp_velocities[2, 0] = v_cg* np.cos(beta) - psi_dot * cp_cg_distance[2] * np.cos(cp_cg_angle[2])
-            cp_velocities[2, 1] = v_cg* np.sin(beta) - psi_dot * cp_cg_distance[2] * np.sin(cp_cg_angle[2])
+            cp_velocities_xy[2, 0] = v_cg* np.cos(beta) - psi_dot * cp_cg_distance[2] * np.cos(cp_cg_angle[2])
+            cp_velocities_xy[2, 1] = v_cg* np.sin(beta) - psi_dot * cp_cg_distance[2] * np.sin(cp_cg_angle[2])
+            cp_velocities[2]       = np.sqrt(cp_velocities_xy[2, 0]**2 + cp_velocities_xy[2, 1]**2)
 
-            cp_velocities[3, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[3] * np.cos(cp_cg_angle[3])
-            cp_velocities[3, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[3] * np.cos(cp_cg_angle[3])
+            cp_velocities_xy[3, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[3] * np.cos(cp_cg_angle[3])
+            cp_velocities_xy[3, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[3] * np.cos(cp_cg_angle[3])
+            cp_velocities[3]       = np.sqrt(cp_velocities_xy[3, 0]**2 + cp_velocities_xy[3, 1]**2)
 
         elif model_type == 2:
-            cp_velocities = np.zeros((2, 2))
+            cp_velocities_xy = np.zeros((2, 2))
+            cp_velocities    = np.zeros((2, 1))
 
-            cp_velocities[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
-            cp_velocities[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+            cp_velocities_xy[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
+            cp_velocities_xy[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+            cp_velocities[0]       = np.sqrt(cp_velocities_xy[0, 0]**2 + cp_velocities_xy[0, 1]**2)
 
-            cp_velocities[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
-            cp_velocities[1, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities_xy[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities_xy[1, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities[1]       = np.sqrt(cp_velocities_xy[1, 0]**2 + cp_velocities_xy[1, 1]**2)
 
         return cp_velocities
 
@@ -116,9 +124,9 @@ def import_tire_data(tire_file):
             if len(words) == 2:
                 pos = words[1].find('$')
                 try:
-                    tire[words[0].rstrip()] = float(words[1][0:pos].rstrip())
+                    tire[words[0].strip()] = float(words[1][0:pos].rstrip())
                 except:
-                    tire[words[0].rstrip()] = words[1][0:pos].rstrip()
+                    tire[words[0].strip()] = words[1][0:pos].rstrip()
 
     return tire 
 
@@ -202,14 +210,14 @@ def Fz(total_mass, v_cg, lf, lr, Cl, Cd, A, COP_distance, COP_height, CG_height,
     Fz_aero_rear    = (-(F_aero_lift * (1 - COP_distance)) + F_aero_drag * COP_height/(lf + lr))
 
     # Load Transfer
-    Fz_load_transfer_front = lr * total_mass * 9.81 / (lf + lr) - CG_height / (lf + lr) (total_mass/9.81 * v_cg_dot * CG_height)
+    Fz_load_transfer_front = lr * total_mass * 9.81 / (lf + lr) - CG_height / (lf + lr) * (total_mass * v_cg_dot)
 
-    Fz_load_transfer_rear = lf * total_mass * 9.81 / (lf + lr) + CG_height / (lf + lr) (total_mass/9.81 * v_cg_dot * CG_height)
+    Fz_load_transfer_rear  = lf * total_mass * 9.81 / (lf + lr) + CG_height / (lf + lr) * (total_mass * v_cg_dot)
 
     # Total Veritical Load
     Fz_front = Fz_aero_front + Fz_load_transfer_front
 
-    Fz_rear = Fz_aero_rear + Fz_load_transfer_rear
+    Fz_rear  = Fz_aero_rear + Fz_load_transfer_rear
 
     return np.array([Fz_front, Fz_rear])
 
@@ -223,5 +231,3 @@ def Rotational_equivalent_Wheel_Velocity(v_cg, beta):
     v_r = v_cg * np.cos(beta)
 
     return v_r
-
-    
