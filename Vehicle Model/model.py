@@ -171,8 +171,11 @@ class Dynamic_Bicycle_Model():
 
         pj_f            = Pacejka(self.tire, F_z, alpha[0], self.LSR_f, self.static_camber_f, 0, v_cg_x, 0)
         F_yf            = pj_f.request('Fy')   
+        F_xf            = pj_f.request('Fx')
+
         pf_r            = Pacejka(self.tire, F_z, alpha[1], self.LSR_r, self.static_camber_r, 0, v_cg_x, 0)
         F_yr            = pf_r.request('Fy')
+        F_xr            = pf_r.request('Fx')
 
         Fy              = np.array([F_yf, F_yr])
 
@@ -183,7 +186,7 @@ class Dynamic_Bicycle_Model():
         cp_velocity     = utils.transform_cog_vel(v_cg, psi_dot, cp_cg_distance, cp_cg_angle, beta, 2)
         
         
-        
+        ##TODO: Add Longitudinal Force generated from drivetrain
 
         dx_dt                     = [0, 0, 0, 0, 0, 0]
 
@@ -191,11 +194,11 @@ class Dynamic_Bicycle_Model():
 
         dx_dt[2]                  = psi_dot
     
-        dx_dt[3]                  = (self.F_Lr + self.F_Lf * np.cos(u[0]) - self.F_Sf * np.sin(u[0]) + self.mass * v_cg_y * psi_dot)/self.mass
+        dx_dt[3]                  = (F_xr + F_xf * np.cos(u[0]) - F_yf * np.sin(u[0]) + self.mass * v_cg_y * psi_dot)/self.mass
     
-        dx_dt[4]                  = (self.F_Sr + self.F_Lf * np.sin(u[0]) + self.F_Sf * np.cos(u[0]) - self.mass * v_cg_x * psi_dot)/self.mass
+        dx_dt[4]                  = (F_yr + F_xf * np.sin(u[0]) + F_yf * np.cos(u[0]) - self.mass * v_cg_x * psi_dot)/self.mass
     
-        dx_dt[5]                  = ((self.F_Lf * np.sin(u) + self.F_Sf * np.cos(u)) * self.cp_cg_distance[0]  - self.F_Sr * self.cp_cg_distance[1])/self.I_zz
+        dx_dt[5]                  = ((F_xf * np.sin(u[0]) + F_yf * np.cos(u[0])) * cp_cg_distance[0]  - F_yr * cp_cg_distance[1])/self.Izz
 
         return np.asarray(dx_dt)
 

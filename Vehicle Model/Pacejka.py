@@ -23,9 +23,6 @@ class Pacejka:
             V   :   Rotational Equivalent of wheel velocity ()
         """
 
-        # Settings
-        self.Forces = {'Fx': self.F_x(), 'Fy': self.F_y(), 'Fc': self.F_c()}
-
         # Print Range warnings to screen
         self.warn_on         =   1
 
@@ -210,5 +207,6 @@ class Pacejka:
         return Fy
 
     def request(self, str):
-        
+        # Settings
+        self.Forces = {'Fx': self.F_x(), 'Fy': self.F_y(), 'Fc': self.F_c()}
         return self.Forces[str]
