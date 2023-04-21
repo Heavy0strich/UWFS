@@ -122,7 +122,7 @@ class Pacejka:
         muX                 =   (self.tire['PDX1'] + self.tire['PDX2'] * dfz)
 
         #(4.E12)
-        Dx                  =  (muX * self.Fz)
+        Dx                  =   (muX * self.Fz)
 
         #(4.E14)
         Ex                  =  ((self.tire['PEX1'] + self.tire['PEX2'] * dfz + self.tire['PEX3'] * dfz**2) * (1 - self.tire['PEX4'])) * self.tire['LEX']

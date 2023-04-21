@@ -169,11 +169,11 @@ class Dynamic_Bicycle_Model():
             self.LSR_f      = utils.Longitudinal_Slip_ratio(2, v_cg_x, cp_velocity[0], alpha[0])
             self.LSR_r      = utils.Longitudinal_Slip_ratio(2, v_cg_x, cp_velocity[1], alpha[1])
 
-        pj_f            = Pacejka(self.tire, F_z, alpha[0], self.LSR_f, self.static_camber_f, 0, v_cg_x, 0)
+        pj_f            = Pacejka(self.tire, F_z[0], alpha[0], self.LSR_f, self.static_camber_f, 0, v_cg_x, 0)
         F_yf            = pj_f.request('Fy')   
         F_xf            = pj_f.request('Fx')
 
-        pf_r            = Pacejka(self.tire, F_z, alpha[1], self.LSR_r, self.static_camber_r, 0, v_cg_x, 0)
+        pf_r            = Pacejka(self.tire, F_z[1], alpha[1], self.LSR_r, self.static_camber_r, 0, v_cg_x, 0)
         F_yr            = pf_r.request('Fy')
         F_xr            = pf_r.request('Fx')
 
