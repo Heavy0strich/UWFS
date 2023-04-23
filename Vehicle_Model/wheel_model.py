@@ -13,7 +13,7 @@ from vehicle_parameter import Vehicle_parameter
 import utils
 
 class Wheel_model:
-    def __init__(self, del_w, beta, alpha, psi_dot, v_cg, F_z, F_y, model_type):
+    def __init__(self, del_w, beta, alpha, psi_dot, v_cg, F_z, model_type):
 
         """
         Initialize the variables for calculation of wheel velocity at contact patch
@@ -68,7 +68,7 @@ class Wheel_model:
         self.v_cg               = v_cg
         
         self.Fz                 = F_z
-        self.Fy                 = F_y
+        #self.Fy                 = F_y
         
         # Parameters for calculating caster
         self.l0                 = -0.03                 # in m
@@ -96,13 +96,13 @@ class Wheel_model:
             self.nl = 0.5 * (self.l0 * np.ones((4,1)) + ((self.l1/self.Fz0) * self.Fz))
         
             # ns takes into consideration lateral force influence on pressure distribution
-            self.ns = 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
+            self.ns = 0 #for simplicity #(actual formual) 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
         elif self.model_type == 2:
             # Dynamic Caster nl
             self.nl = 0.5 * (self.l0 * np.ones((2,1)) + ((self.l1/self.Fz0) * self.Fz))
         
             # ns takes into consideration lateral force influence on pressure distribution
-            self.ns = 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
+            self.ns = 0 #for simplicity #(actual Formula) 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
 
     def contact_patch_cog_distance(self):
         """

@@ -231,3 +231,19 @@ def Rotational_equivalent_Wheel_Velocity(v_cg, beta):
     v_r = v_cg * np.cos(beta)
 
     return v_r
+
+def Rolling_resistance(v, p):
+    """
+    https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
+
+    c = 0.005 + (1 / p) (0.01 + 0.0095 (v / 100)2)
+
+    c = rolling coefficient
+
+    p = tire pressure (bar)
+
+    v = velocity (km/h)
+
+    """
+
+    return 0.005 + (1 / p) * (0.01 + 0.0095 * (v * 3.6/ 100)**2)

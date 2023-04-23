@@ -49,6 +49,7 @@ class Vehicle_parameter():
         self.Rtrack             = 1.1938                                                             # Rear Track(m)
         self.AVGtrack           = (self.Ftrack + self.Rtrack)/2                                      # Average Track(m)
         self.wheel_dia          = 0.457                                                              # Wheel Diameter(m)
+        self.tire_pressure      = 34                                                                 # Tire Pressure(psi)                               
 
         # distance of COG to front and rear axle
         self.lf                 = cd_coordinates[0]
