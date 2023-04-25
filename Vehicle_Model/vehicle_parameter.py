@@ -15,7 +15,7 @@ class Vehicle_parameter():
         """
         initialising the vehicle's parameters
         """
-        data = pd.read_excel('mass2.xlsx', engine='openpyxl')
+        data = pd.read_excel('C:\\Users\\tiwar\\Desktop\\Project\\FSDS\\UWFS\\Vehicle_Model\\mass2.xlsx', engine='openpyxl')
         mass                    = data['Mass'][:-2].to_numpy()
         cgx                     = data['CGx'][:-2].to_numpy()
         cgy                     = data['CGy'][:-2].to_numpy()
@@ -69,6 +69,10 @@ class Vehicle_parameter():
         self.Cl                 = -3.05                                                             # Lift Coefficient
         self.Cd                 = 1.44                                                              # Drag Coefficient
         self.frontArea          = 1                                                                 # Frontal Area(m^2)  % Aero frontal area for BrkG.drag and lift calculation. Usually normalized to 1 by wind tunnel(ft^2)
+
+        # Tire Parameters
+        self.static_camber_f    = -1.9                                                                 # Static Camber of Front Tires(deg)
+        self.static_camber_r    = -1.5                                                                 # Static Camber of Rear Tires(deg)
 
 
 

@@ -206,6 +206,10 @@ class Pacejka:
 
         return Fy
 
+    def F_c(self):
+        # Combined longitudinal and later (future scope)
+        pass
+
     def request(self, str):
         # Settings
         self.Forces = {'Fx': self.F_x(), 'Fy': self.F_y(), 'Fc': self.F_c()}

@@ -36,12 +36,15 @@ radius                  = vp.wheel_dia
 max_wheel_angle         = vp.max_wheel_angle
 steering_ratio          = vp.steering_ratio
 
+static_camber_f         = vp.static_camber_f
+static_camber_r         = vp.static_camber_r
+tire_pressure           = vp.tire_pressure * 0.069                                                      # Converting from psi to bar   
+
 C_m                     =  mass * 9.81
 # Importing Tire Data
 tire                    = utils.import_tire_data('R5_Hoosier 6.0-18.0-10 P12 LC0 Rim7.TIR')
-static_camber_f         = tire['staticCamberF']
-static_camber_r         = tire['staticCamberR']
-tire_pressure           = vp.tire_pressure * 0.069                                                      # Converting from psi to bar    
+
+ 
 
 
 
@@ -87,11 +90,17 @@ D               = model.set_variable(var_type='_u', var_name='D', shape=(1,1))
 # define time varying parameters
 beta            = model.set_variable(var_type='_tvp', var_name='beta', shape=(1,1))
 
-alpha           = model.set_variable(var_type='_tvp', var_name='alpha', shape=(2,1))
-
 v_cg            = model.set_variable(var_type='_tvp', var_name='v_cg', shape=(1,1))
 
+alpha           = model.set_variable(var_type='_tvp', var_name='alpha', shape=(2,1))
+
 F_z             = model.set_variable(var_type='_tvp', var_name='F_z', shape=(2,1))
+
+cp_cg_distance  = model.set_variable(var_type='_tvp', var_name='cp_cg_distance', shape=(2,1))
+
+cp_cg_angle     = model.set_variable(var_type='_tvp', var_name='cp_cg_angle', shape=(2,1))
+
+cp_velocity     = model.set_variable(var_type='_tvp', var_name='cp_velocity', shape=(2,1))
 
 LSR_f           = model.set_variable(var_type='_tvp', var_name='LSR_f', shape=(1,1))
 
@@ -106,12 +115,6 @@ F_yr            = model.set_variable(var_type='_tvp', var_name='F_yr', shape=(1,
 F_xr            = model.set_variable(var_type='_tvp', var_name='F_xr', shape=(1,1))
 
 tau             = model.set_variable(var_type='_tvp', var_name='tau', shape=(1,1))
-
-cp_cg_distance  = model.set_variable(var_type='_tvp', var_name='cp_cg_distance', shape=(2,1))
-
-cp_cg_angle     = model.set_variable(var_type='_tvp', var_name='cp_cg_angle', shape=(2,1))
-
-cp_velocity     = model.set_variable(var_type='_tvp', var_name='cp_velocity', shape=(2,1))
 
 del_e           = model.set_variable(var_type='_z', var_name='del_e', shape=(1,1))
 

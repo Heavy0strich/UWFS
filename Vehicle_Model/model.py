@@ -161,6 +161,12 @@ class Dynamic_Bicycle_Model():
 
         alpha           = utils.Slip_Angle(2, v_cg, psi_dot, self.lf, self.lr, beta, u[0])
 
+        wm              = Wheel_model(u[0], beta, alpha, psi_dot, v_cg, F_z, 2)
+        cp_cg_distance  = wm.contact_patch_cog_distance()
+        cp_cg_angle     = wm.contact_patch_cog_angle()
+
+        cp_velocity     = utils.transform_cog_vel(v_cg, psi_dot, cp_cg_distance, cp_cg_angle, beta, 2)
+
         if v_cg == 0:
             #TODO Better way to update LSR and adding the affect of Torque Request on LSR
             self.LSR_f      = utils.Longitudinal_Slip_ratio(2, 0, 0, 0)
@@ -178,12 +184,6 @@ class Dynamic_Bicycle_Model():
         F_xr            = pf_r.request('Fx')
 
         Fy              = np.array([F_yf, F_yr])
-
-        wm              = Wheel_model(u, beta, alpha, psi_dot, v_cg, F_z, Fy, 2)
-        cp_cg_distance  = wm.contact_patch_cog_distance()
-        cp_cg_angle     = wm.contact_patch_cog_angle()
-
-        cp_velocity     = utils.transform_cog_vel(v_cg, psi_dot, cp_cg_distance, cp_cg_angle, beta, 2)
         
         
         ##TODO: Add Longitudinal Force generated from drivetrain

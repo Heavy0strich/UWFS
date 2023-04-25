@@ -5,6 +5,7 @@ UW Formula Motorsports
 Driverless
 """
 import numpy as np
+import casadi as ca
 
 def coordinate_transform_Vehicle_to_Inertial(x, y, psi):
     """
@@ -161,23 +162,25 @@ def Slip_Angle(model_type, v_cg, psi_dot, lf, lr, beta, del_w):
 
     return alpha
 
-def Longitudinal_Slip_ratio(model_type, v_r, v_cp, alpha):
+def Longitudinal_Slip_ratio_acceleration(model_type, num, v_r, alpha):
     if model_type == 2:
         """
         This function calculates the Longitudinal slip ratio of the Wheels
         Calculates one wheel at a time
         """
-        k = 0
+        return num/(v_r * np.cos(alpha))
 
-        try:
-            if v_r * np.cos(alpha) - v_cp <= 0:
-                k = (v_r * np.cos(alpha) - v_cp) / v_cp
-            elif v_r * np.cos(alpha) - v_cp > 0:
-                k = (v_r * np.cos(alpha) - v_cp)/v_r * np.cos(alpha)
-        except:
-            print("The vehicle is not moving. The slip ratio is undefined")
+        #print(f'v_cp = {v_cp}, v_cg = {v_r}')
+        #print("The vehicle is not moving. The slip ratio is undefined")
 
-    return k
+def Longitudinal_Slip_ratio_braking(model_type, num, v_cp):
+    if model_type == 2:
+        """
+        This function calculates the Longitudinal slip ratio of the Wheels
+        Calculates one wheel at a time
+        """
+
+        return num / v_cp
 
 def Aerodynamic_Force(v_cg, A, Cd):
     """

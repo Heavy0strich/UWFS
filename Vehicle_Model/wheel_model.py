@@ -102,7 +102,7 @@ class Wheel_model:
             self.nl = 0.5 * (self.l0 * np.ones((2,1)) + ((self.l1/self.Fz0) * self.Fz))
         
             # ns takes into consideration lateral force influence on pressure distribution
-            self.ns = 0 #for simplicity #(actual Formula) 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
+            self.ns = np.array([0, 0]).reshape(-1, 1) #for simplicity #(actual Formula) 3 * np.multiply(self.nl, np.tan(self.alpha)) + self.Fy/self.c_press
 
     def contact_patch_cog_distance(self):
         """
