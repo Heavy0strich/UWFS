@@ -141,15 +141,17 @@ class Wheel_model:
                         self.nl[3] * np.sin(self.del_w[3]))**2)**(1/2)
         elif self.model_type == 2:
             # distance between contact patch and COG in XY plane 
-            self.cp_cg_distance     = np.zeros((2, 1))
+            #self.cp_cg_distance     = np.zeros((2, 1))
 
-            self.cp_cg_distance[0] = ((self.lf - self.nl[0] * np.cos(self.del_w[0]) + 
+            self.cp_cg_distance_f = ((self.lf - self.nl[0] * np.cos(self.del_w[0]) + 
                         self.ns[0] * np.sin(self.del_w[0]))**2 + 
                         (self.ns[0] * np.cos(self.del_w[0]) +
                         self.nl[0] * np.sin(self.del_w[0]))**2)**(1/2)
             
-            self.cp_cg_distance[1] = ((self.lr + self.nl[1])**2 + 
+            self.cp_cg_distance_r = ((self.lr + self.nl[1])**2 + 
                         (self.ns[1])**2)**(1/2)
+            
+            self.cp_cg_distance = np.array([self.cp_cg_distance_f, self.cp_cg_distance_r]).reshape(-1, 1)
 
         return self.cp_cg_distance
     
@@ -180,13 +182,15 @@ class Wheel_model:
         elif self.model_type == 2:
             
             # angle between contact patch and COG in XY plane
-            self.cp_cg_angle        = np.zeros((2, 1))        
+            #self.cp_cg_angle        = np.zeros((2, 1))        
             
-            self.cp_cg_angle[0] = np.arctan((self.ns[0] * np.cos(self.del_w[0])
+            self.cp_cg_angle_f = np.arctan((self.ns[0] * np.cos(self.del_w[0])
                         + self.nl[0] * np.sin(self.del_w[0]))/(self.lf - self.nl[0] * np.cos(self.del_w[0])
                         + self.ns[0] * np.sin(self.del_w[0])))
 
-            self.cp_cg_angle[1] = np.arctan((self.ns[1])/(self.lr + self.nl[1]))
+            self.cp_cg_angle_r = np.arctan((self.ns[1])/(self.lr + self.nl[1]))
+
+            self.cp_cg_angle = np.array([self.cp_cg_angle_f, self.cp_cg_angle_r]).reshape(-1, 1)
 
         return self.cp_cg_angle
 

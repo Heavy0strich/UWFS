@@ -36,10 +36,7 @@ class Vehicle_parameter():
 
         square_XYZ              = np.linalg.inv(A) @ np.array([Ix.sum(), Iy.sum(), Iz.sum()])/self.total_mass
 
-        cd_coordinates          = np.zeros(3)                                                        # Center of Gravity Coordinates
-
-        for i in range(3):
-            cd_coordinates[i]   = np.sqrt(square_XYZ[i])                                             # (x, y, z) coordinates of the center of gravity
+        cd_coordinates          = np.array([np.sqrt(square_XYZ[0]), np.sqrt(square_XYZ[1]), np.sqrt(square_XYZ[2])])       # (x, y, z) coordinates of the center of gravity                                             
 
         self.cg_height          = cd_coordinates[2]                                                  # Height of CG from ground(m)
 

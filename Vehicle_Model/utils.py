@@ -5,7 +5,7 @@ UW Formula Motorsports
 Driverless
 """
 import numpy as np
-import casadi as ca
+from casadi import if_else
 
 def coordinate_transform_Vehicle_to_Inertial(x, y, psi):
     """
@@ -60,16 +60,27 @@ def transform_cog_vel(v_cg, psi_dot, cp_cg_distance, cp_cg_angle, beta, model_ty
             cp_velocities[3]       = np.sqrt(cp_velocities_xy[3, 0]**2 + cp_velocities_xy[3, 1]**2)
 
         elif model_type == 2:
-            cp_velocities_xy = np.zeros((2, 2))
-            cp_velocities    = np.zeros((2, 1))
+            # cp_velocities_xy = np.zeros((2, 2))
+            # cp_velocities    = np.zeros((2, 1))
 
-            cp_velocities_xy[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
-            cp_velocities_xy[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
-            cp_velocities[0]       = np.sqrt(cp_velocities_xy[0, 0]**2 + cp_velocities_xy[0, 1]**2)
+            # cp_velocities_xy[0, 0] = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
+            # cp_velocities_xy[0, 1] = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+            # cp_velocities[0]       = np.sqrt(cp_velocities_xy[0, 0]**2 + cp_velocities_xy[0, 1]**2)
 
-            cp_velocities_xy[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
-            cp_velocities_xy[1, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
-            cp_velocities[1]       = np.sqrt(cp_velocities_xy[1, 0]**2 + cp_velocities_xy[1, 1]**2)
+            # cp_velocities_xy[1, 0] = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            # cp_velocities_xy[1, 1] = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            # cp_velocities[1]       = np.sqrt(cp_velocities_xy[1, 0]**2 + cp_velocities_xy[1, 1]**2)
+            cp_velocities_xf = v_cg * np.cos(beta) - psi_dot * cp_cg_distance[0] * np.sin(cp_cg_angle[0])
+            cp_velocities_yf = v_cg * np.sin(beta) + psi_dot * cp_cg_distance[0] * np.cos(cp_cg_angle[0])
+
+            cp_velocities_f = np.sqrt(cp_velocities_xf**2 + cp_velocities_yf**2)
+
+            cp_velocities_xr = v_cg * np.cos(beta) + psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+            cp_velocities_yr = v_cg * np.sin(beta) - psi_dot * cp_cg_distance[1] * np.cos(cp_cg_angle[1])
+
+            cp_velocities_r = np.sqrt(cp_velocities_xr**2 + cp_velocities_yr**2)
+
+            cp_velocities = np.array([[cp_velocities_f], [cp_velocities_r]])
 
         return cp_velocities
 
@@ -136,7 +147,6 @@ def Vehicle_Body_Side_Slip_Angle(v_cg_x, v_cg_y, psi):
     This function calculates the body side slip angle beta
     v_cg : CoG velocity in the inertial frame([X, Y]) Directions
     """
-    beta = 0
 
     try:
         beta = np.arctan(v_cg_y/v_cg_x) - psi
@@ -152,14 +162,15 @@ def Slip_Angle(model_type, v_cg, psi_dot, lf, lr, beta, del_w):
         it is a vector of size 2. The first element is the slip angle of the front wheel and
         the second element is the slip angle of the rear wheel.
         """
-        alpha = np.zeros((2, 1))
+        #alpha = np.zeros((2, 1))
 
         try:
-            alpha[0] = - np.arctan((v_cg * np.sin(beta) + lf * psi_dot)/v_cg * np.cos(beta)) + del_w
-            alpha[1] = np.arctan((- v_cg * np.sin(beta) + lr * psi_dot)/v_cg * np.cos(beta))
+            alpha_f = - np.arctan((v_cg * np.sin(beta) + lf * psi_dot)/v_cg * np.cos(beta)) + del_w
+            alpha_r = np.arctan((- v_cg * np.sin(beta) + lr * psi_dot)/v_cg * np.cos(beta))
         except:
             print("The vehicle is not moving. The slip angle is undefined")
 
+        alpha = np.array([[alpha_f], [alpha_r]])
     return alpha
 
 def Longitudinal_Slip_ratio_acceleration(model_type, num, v_r, alpha):
@@ -168,7 +179,8 @@ def Longitudinal_Slip_ratio_acceleration(model_type, num, v_r, alpha):
         This function calculates the Longitudinal slip ratio of the Wheels
         Calculates one wheel at a time
         """
-        return num/(v_r * np.cos(alpha))
+        LSR = if_else(num == 0, 0, num/(v_r * np.cos(alpha)))
+        return LSR
 
         #print(f'v_cp = {v_cp}, v_cg = {v_r}')
         #print("The vehicle is not moving. The slip ratio is undefined")
@@ -180,7 +192,9 @@ def Longitudinal_Slip_ratio_braking(model_type, num, v_cp):
         Calculates one wheel at a time
         """
 
-        return num / v_cp
+        LSR = if_else(num == 0, 0, num/v_cp)
+        
+        return LSR
 
 def Aerodynamic_Force(v_cg, A, Cd):
     """
