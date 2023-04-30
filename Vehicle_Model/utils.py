@@ -164,11 +164,8 @@ def Slip_Angle(model_type, v_cg, psi_dot, lf, lr, beta, del_w):
         """
         #alpha = np.zeros((2, 1))
 
-        try:
-            alpha_f = - np.arctan((v_cg * np.sin(beta) + lf * psi_dot)/v_cg * np.cos(beta)) + del_w
-            alpha_r = np.arctan((- v_cg * np.sin(beta) + lr * psi_dot)/v_cg * np.cos(beta))
-        except:
-            print("The vehicle is not moving. The slip angle is undefined")
+        alpha_f = - np.arctan2((v_cg * np.sin(beta) + lf * psi_dot)/v_cg * np.cos(beta)) + del_w
+        alpha_r = np.arctan2((- v_cg * np.sin(beta) + lr * psi_dot)/v_cg * np.cos(beta))
 
         alpha = np.array([[alpha_f], [alpha_r]])
     return alpha
