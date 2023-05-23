@@ -112,8 +112,6 @@ class Dynamic_Bicycle_Model():
         self.static_camber_r = self.tire['staticCamberR']
 
 
-
-
     def nolinear_function(self, t, x, u):
         # TODO: define the states and dynamics!!
         """
